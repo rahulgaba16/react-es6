@@ -4,3 +4,6 @@ To start :
 2. Run ```npm install```
 3. Run ```npm start```
 4. Go to ```localhost:8080``` on your browser.
+
+Used ```react-quick``` generator by Soham Kamani
+react learning
