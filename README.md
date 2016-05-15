@@ -6,4 +6,3 @@ To start :
 4. Go to ```localhost:8080``` on your browser.
 
 Used ```react-quick``` generator by Soham Kamani
-react learning
