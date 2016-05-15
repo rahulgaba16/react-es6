@@ -1,4 +1,26 @@
-html, body {
-  margin : 0;
+body,
+html {
+  margin: 0;
   padding: 0;
+}
+body {
+  width: 50%;
+  margin: 0 auto;
+  font-family: 'Roboto', sans-serif;
+  text-shadow: white -1px 1px;
+  text-align: center;
+}
+.product-table {
+  margin: auto;
+}
+.search-box {
+  padding: 15px;
+}
+.checkbox {
+  padding-top: 10px;
+}
+.product-heading {
+  padding-top: 10px;
+  padding-bottom: 5px;
+  display: inline-block;
 }

@@ -38,10 +38,12 @@ class SearchBar extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className='search-box'>
         <input type='text' ref='filteredText' value={this.props.filteredText} onChange={this.searchChanged}/><br/>
-        <input type='checkbox' ref='inStockCheck' checked={this.props.inStockCheck} onChange={this.searchChanged}/>
-        Show products in stock
+        <div className='checkbox'>
+          <input type='checkbox' ref='inStockCheck' checked={this.props.inStockCheck} onChange={this.searchChanged}/>
+          <span>Show products in stock</span>
+        </div>
       </div>
     )
   }
@@ -59,7 +61,7 @@ class ProductRow extends React.Component {
   }
 }
 
-const CategoryRow = (props) => <tr key={props.category}><th>{props.category}</th></tr>;
+const CategoryRow = (props) => <tr className='product-heading' key={props.category}><th colSpan='2'>{props.category}</th></tr>;
 
 class ProductTable extends React.Component {
   getTable() {
@@ -80,7 +82,7 @@ class ProductTable extends React.Component {
   render() {
     return (
       <div>
-        <table>
+        <table className='product-table'>
           <thead>
             <tr>
               <th>Name</th>
