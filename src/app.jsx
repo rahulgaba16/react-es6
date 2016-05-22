@@ -1,29 +1,13 @@
 'use strict';
 import React from 'react';
-
-const PRODUCTS = [
-  {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
-  {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
-  {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
-  {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
-  {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
-  {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
-];
+import store from './reduxStore';
 
 class FilterableProductTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state =  {filteredText:'',inStockCheck:false};
-    this.handleUserInput = this.handleUserInput.bind(this);
-  }
-  handleUserInput({filteredText, inStockCheck}) {
-    this.setState({filteredText, inStockCheck});
-  }
   render() {
     return (
       <div>
-        <SearchBar filteredText={this.state.filteredText} inStockCheck={this.state.inStockCheck} handleUserInput={this.handleUserInput}/>
-        <ProductTable allProducts={PRODUCTS} inStockCheck={this.state.inStockCheck} filteredText={this.state.filteredText}/>
+        <SearchBar />
+        <ProductTable allProducts={store.getState()} />
       </div>
     );
   }
@@ -32,17 +16,21 @@ class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.searchChanged = this.searchChanged.bind(this);
+    this.stockCheckChanged = this.stockCheckChanged.bind(this);
   }
   searchChanged() {
-    this.props.handleUserInput({filteredText:this.refs.filteredText.value,inStockCheck:this.refs.inStockCheck.checked});
+    store.dispatch({type:'TOGGLE_STOCKCHECK', stockCheck:this.refs.inStockCheck.checked});
+  }
+  stockCheckChanged() {
+    store.dispatch({type:'SEARCH',searchText:this.refs.filteredText.value});
   }
   render() {
     return (
       <div className='search-box'>
-        <input type='text' ref='filteredText' value={this.props.filteredText} onChange={this.searchChanged}/><br/>
+        <input type='text' ref='filteredText' value={this.props.filteredText} onChange={this.stockCheckChanged}/><br/>
         <div className='checkbox'>
-          <input type='checkbox' ref='inStockCheck' checked={this.props.inStockCheck} onChange={this.searchChanged}/>
-          <span>Show products in stock</span>
+          <input id='stock-check' type='checkbox' ref='inStockCheck' checked={this.props.inStockCheck} onChange={this.searchChanged}/>
+          <label htmlFor='stock-check'>Show products in stock</label>
         </div>
       </div>
     )
@@ -71,7 +59,7 @@ class ProductTable extends React.Component {
       if(lastHeading!==product.category) {
         rows.push(<CategoryRow category={product.category} key = {product.category}/>);
       }
-      if((this.props.inStockCheck && !product.stocked) || product.name.toLowerCase().indexOf(this.props.filteredText.toLowerCase()) === -1 ) {
+      if(!product.visible) {
         return;
       }
       rows.push(<ProductRow product={product} key = {product.name}/>);
