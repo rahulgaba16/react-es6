@@ -15,21 +15,17 @@ class FilterableProductTable extends React.Component {
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
-    this.searchChanged = this.searchChanged.bind(this);
-    this.stockCheckChanged = this.stockCheckChanged.bind(this);
+    this.handleInput = this.handleInput.bind(this);
   }
-  searchChanged() {
-    store.dispatch({type:'TOGGLE_STOCKCHECK', stockCheck:this.refs.inStockCheck.checked});
-  }
-  stockCheckChanged() {
-    store.dispatch({type:'SEARCH',searchText:this.refs.filteredText.value});
+  handleInput() {
+    store.dispatch({type:'SEARCH',searchText:this.refs.filteredText.value, stockCheck:this.refs.inStockCheck.checked});
   }
   render() {
     return (
       <div className='search-box'>
-        <input type='text' ref='filteredText' value={this.props.filteredText} onChange={this.stockCheckChanged}/><br/>
+        <input type='text' ref='filteredText' value={this.props.filteredText} onChange={this.handleInput}/><br/>
         <div className='checkbox'>
-          <input id='stock-check' type='checkbox' ref='inStockCheck' checked={this.props.inStockCheck} onChange={this.searchChanged}/>
+          <input id='stock-check' type='checkbox' ref='inStockCheck' checked={this.props.inStockCheck} onChange={this.handleInput}/>
           <label htmlFor='stock-check'>Show products in stock</label>
         </div>
       </div>

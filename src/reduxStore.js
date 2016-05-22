@@ -43,42 +43,29 @@ const PRODUCTS = [
   }
 ];
 
-const getFilteredResults = (state, text) => {
+const initialState = () => {
+  PRODUCTS.forEach((obj) => {
+    obj.visible = true;
+  });
+  return PRODUCTS;
+}
+
+const getFilteredResults = (state, action) => {
+  let stockCheck = false;
   return state.map((product, i) => {
-    if (product.name.toLowerCase().indexOf(text.toLowerCase()) > -1) {
-      return Object.assign({}, product, {
-        visible: true
-      });
-    } else {
-      return Object.assign({}, product, {
-        visible: false
-      });
-    }
+    stockCheck = (action.stockCheck ? product.stocked : true);
+    return Object.assign({}, product, {
+      visible: product.name.toLowerCase().indexOf(action.searchText.toLowerCase()) > -1 && stockCheck
+    });
   });
 };
 
 const shoppingCart = (state = PRODUCTS, action) => {
   switch (action.type) {
     case 'SEARCH':
-      return getFilteredResults(store.getState(), action.searchText);
-    case 'TOGGLE_STOCKCHECK':
-      if (action.stockCheck) {
-        return state.map((obj) => {
-          return Object.assign(obj, {
-            visible: obj.stocked
-          });
-        });
-      } else {
-        state.forEach((obj) => {
-          obj.visible = true;
-        });
-        return state;
-      }
+      return getFilteredResults(store.getState(), action);
     default:
-      state.forEach((obj) => {
-        obj.visible = true;
-      });
-      return state;
+      return initialState();
   }
 }
 const store = createStore(shoppingCart);
